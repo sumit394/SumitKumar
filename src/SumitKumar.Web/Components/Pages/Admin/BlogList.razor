@@ -1,0 +1,58 @@
+@page "/admin/blog"
+@layout AdminLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@using SumitKumar.Application.Abstractions
+@inject IBlogService BlogService
+@inject NavigationManager Nav
+
+<PageTitle>Blog Management</PageTitle>
+
+<div class="content-header">
+    <h1 class="m-0">Blog</h1>
+    <a class="btn btn-primary" href="admin/blog/new"><i class="bi bi-plus-lg"></i> New post</a>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (_posts is null) { <p class="p-3"><em>Loading...</em></p> }
+        else if (_posts.Count == 0) { <p class="p-3">No posts yet.</p> }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead><tr><th>Title</th><th>Category</th><th>Status</th><th>Updated</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var p in _posts)
+                        {
+                            <tr>
+                                <td><strong>@p.Title</strong><br /><small class="text-muted">/blog/@p.Slug</small></td>
+                                <td>@p.CategoryName</td>
+                                <td>
+                                    @if (p.IsPublished) { <span class="badge bg-success">Published</span> }
+                                    else { <span class="badge bg-secondary">Draft</span> }
+                                </td>
+                                <td>@p.PublishedUtc?.ToString("yyyy-MM-dd")</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-primary" href="admin/blog/edit/@p.Id"><i class="bi bi-pencil"></i></a>
+                                    <button class="btn btn-sm btn-outline-danger" @onclick="() => Delete(p.Id)"><i class="bi bi-trash"></i></button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private IReadOnlyList<SumitKumar.Application.DTOs.BlogPostDto>? _posts;
+
+    protected override async Task OnInitializedAsync() => _posts = await BlogService.GetAllAsync();
+
+    private async Task Delete(Guid id)
+    {
+        await BlogService.DeleteAsync(id);
+        _posts = await BlogService.GetAllAsync();
+    }
+}

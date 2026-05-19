@@ -1,0 +1,49 @@
+@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Components.Authorization
+
+<div class="admin-wrapper">
+    <header class="admin-topbar">
+        <a class="brand" href="admin">SumitKumar &mdash; Admin</a>
+        <div class="user-menu dropdown">
+            <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
+                <i class="bi bi-person-circle"></i>
+                <AuthorizeView><Authorized>@context.User.Identity?.Name</Authorized><NotAuthorized>Account</NotAuthorized></AuthorizeView>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="admin/profile"><i class="bi bi-person"></i> Profile</a></li>
+                <li><a class="dropdown-item" href="Account/Manage"><i class="bi bi-gear"></i> Account settings</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken />
+                        <input type="hidden" name="ReturnUrl" value="/" />
+                        <button class="dropdown-item" type="submit"><i class="bi bi-box-arrow-right"></i> Log out</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <nav class="admin-sidebar">
+        <a href="admin" class="@NavCls("admin")"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="admin/blog" class="@NavCls("admin/blog")"><i class="bi bi-journal-richtext"></i> Blog</a>
+        <a href="admin/messages" class="@NavCls("admin/messages")"><i class="bi bi-envelope"></i> Messages</a>
+        <a href="admin/profile" class="@NavCls("admin/profile")"><i class="bi bi-person"></i> Profile</a>
+        <a href="/"><i class="bi bi-globe2"></i> View public site</a>
+    </nav>
+
+    <main class="admin-content">
+        @Body
+    </main>
+</div>
+
+@code {
+    [CascadingParameter] private HttpContext? Http { get; set; }
+    [Inject] private NavigationManager Nav { get; set; } = default!;
+
+    private string NavCls(string path)
+    {
+        var current = new Uri(Nav.Uri).AbsolutePath.Trim('/');
+        return current.Equals(path, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
+    }
+}

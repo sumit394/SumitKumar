@@ -1,0 +1,38 @@
+@using Microsoft.Extensions.Options
+@inject IOptions<PortfolioOptions> Options
+
+<section id="resume" class="resume section">
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Resume</h2>
+        <p>@Options.Value.Resume.Summary</p>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h3 class="resume-title">Education</h3>
+                @foreach (var e in Options.Value.Resume.Education)
+                {
+                    <div class="resume-item">
+                        <h4>@e.Title</h4>
+                        <h5>@e.Period</h5>
+                        <p><em>@e.Organization, @e.Location</em></p>
+                        <ul>@foreach (var h in e.Highlights){ <li>@h</li> }</ul>
+                    </div>
+                }
+            </div>
+            <div class="col-lg-6">
+                <h3 class="resume-title">Professional Experience</h3>
+                @foreach (var e in Options.Value.Resume.Experience)
+                {
+                    <div class="resume-item">
+                        <h4>@e.Title</h4>
+                        <h5>@e.Period</h5>
+                        <p><em>@e.Organization, @e.Location</em></p>
+                        <ul>@foreach (var h in e.Highlights){ <li>@h</li> }</ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

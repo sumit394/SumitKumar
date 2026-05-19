@@ -1,0 +1,45 @@
+@page "/admin/messages"
+@layout AdminLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@using Microsoft.EntityFrameworkCore
+@using SumitKumar.Infrastructure.Persistence
+@inject BlogDbContext Db
+
+<PageTitle>Contact Messages</PageTitle>
+
+<div class="content-header"><h1 class="m-0">Contact Messages</h1></div>
+
+<div class="card">
+    <div class="card-body p-0">
+        @if (_messages is null) { <p class="p-3"><em>Loading...</em></p> }
+        else if (_messages.Count == 0) { <p class="p-3">No messages.</p> }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead><tr><th>Date</th><th>From</th><th>Subject</th><th>Delivered</th></tr></thead>
+                    <tbody>
+                        @foreach (var m in _messages)
+                        {
+                            <tr>
+                                <td>@m.CreatedUtc.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@m.FromName <br /><small class="text-muted">@m.FromEmail</small></td>
+                                <td>@m.Subject<br /><small class="text-muted">@(m.Body.Length > 120 ? m.Body[..120] + "…" : m.Body)</small></td>
+                                <td>@(m.DeliveredToInbox ? "✔" : "—")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<SumitKumar.Domain.Entities.ContactMessage>? _messages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _messages = await Db.ContactMessages.OrderByDescending(m => m.CreatedUtc).Take(200).ToListAsync();
+    }
+}

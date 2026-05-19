@@ -1,0 +1,70 @@
+@page "/blog/{Slug}"
+@layout PortfolioLayout
+@inject PortfolioApiClient Api
+
+<PageTitle>@(_post?.Title ?? "Blog")</PageTitle>
+
+<section id="blog-details" class="blog-details section">
+    <div class="container">
+        @if (_loading)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else if (_post is null)
+        {
+            <h2>Post not found</h2>
+            <p><a href="blog">Back to blog</a></p>
+        }
+        else
+        {
+            <article class="article">
+                @if (!string.IsNullOrEmpty(_post.CoverImageUrl))
+                {
+                    <div class="post-img"><img src="@_post.CoverImageUrl" alt="@_post.Title" class="img-fluid" /></div>
+                }
+                <h2 class="title">@_post.Title</h2>
+                <div class="meta-top">
+                    <ul>
+                        <li class="d-flex align-items-center"><i class="bi bi-person"></i> @_post.AuthorName</li>
+                        <li class="d-flex align-items-center"><i class="bi bi-clock"></i> @_post.PublishedUtc?.ToString("MMM d, yyyy")</li>
+                        @if (!string.IsNullOrEmpty(_post.CategoryName))
+                        {
+                            <li class="d-flex align-items-center"><i class="bi bi-folder2"></i> @_post.CategoryName</li>
+                        }
+                    </ul>
+                </div>
+                <div class="content">
+                    @* Naive markdown rendering: paragraphs from newlines. Plug in Markdig in your project for full support. *@
+                    @foreach (var para in (_post.ContentMarkdown ?? string.Empty).Split("\n\n", StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        <p>@para</p>
+                    }
+                </div>
+                @if (_post.Tags.Count > 0)
+                {
+                    <div class="meta-bottom">
+                        <i class="bi bi-tags"></i>
+                        <ul class="tags">
+                            @foreach (var t in _post.Tags){ <li><a href="#">@t</a></li> }
+                        </ul>
+                    </div>
+                }
+            </article>
+            <p><a href="blog">&larr; All posts</a></p>
+        }
+    </div>
+</section>
+
+@code {
+    [Parameter] public string Slug { get; set; } = string.Empty;
+    private BlogPostDto? _post;
+    private bool _loading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _loading = true;
+        try { _post = await Api.GetPostAsync(Slug); }
+        catch { _post = null; }
+        finally { _loading = false; }
+    }
+}

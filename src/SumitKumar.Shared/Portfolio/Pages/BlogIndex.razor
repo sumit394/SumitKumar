@@ -1,0 +1,60 @@
+@page "/blog"
+@layout PortfolioLayout
+@inject PortfolioApiClient Api
+
+<PageTitle>Blog – Sumit Kumar</PageTitle>
+
+<section id="blog" class="blog section">
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Blog</h2>
+        <p>Notes on engineering, leadership, and technology.</p>
+    </div>
+
+    <div class="container">
+        @if (_posts is null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else if (_posts.Count == 0)
+        {
+            <p>No posts yet. Check back soon.</p>
+        }
+        else
+        {
+            <div class="row gy-4 posts-list">
+                @foreach (var post in _posts)
+                {
+                    <div class="col-xl-4 col-md-6">
+                        <article>
+                            @if (!string.IsNullOrEmpty(post.CoverImageUrl))
+                            {
+                                <div class="post-img"><img src="@post.CoverImageUrl" alt="@post.Title" class="img-fluid" /></div>
+                            }
+                            <p class="post-category">@post.CategoryName</p>
+                            <h2 class="title">
+                                <a href="@($"blog/{post.Slug}")">@post.Title</a>
+                            </h2>
+                            <div class="d-flex align-items-center">
+                                <div class="post-meta">
+                                    <p class="post-author">@post.AuthorName</p>
+                                    <p class="post-date"><time datetime="@post.PublishedUtc?.ToString("o")">@post.PublishedUtc?.ToString("MMM d, yyyy")</time></p>
+                                </div>
+                            </div>
+                            <p class="post-summary">@post.Summary</p>
+                        </article>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private IReadOnlyList<BlogPostDto>? _posts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try { _posts = await Api.GetPublishedPostsAsync(); }
+        catch { _posts = Array.Empty<BlogPostDto>(); }
+    }
+}

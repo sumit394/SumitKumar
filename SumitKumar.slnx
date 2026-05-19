@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SumitKumar.Application/SumitKumar.Application.csproj" />
+    <Project Path="src/SumitKumar.Domain/SumitKumar.Domain.csproj" />
+    <Project Path="src/SumitKumar.Infrastructure/SumitKumar.Infrastructure.csproj" />
+    <Project Path="src/SumitKumar.Shared/SumitKumar.Shared.csproj" />
+    <Project Path="src/SumitKumar.Web.Client/SumitKumar.Web.Client.csproj" />
+    <Project Path="src/SumitKumar.Web/SumitKumar.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SumitKumar.UnitTests/SumitKumar.UnitTests.csproj" />
+  </Folder>
+</Solution>

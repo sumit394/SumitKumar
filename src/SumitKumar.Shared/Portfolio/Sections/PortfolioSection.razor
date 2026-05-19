@@ -1,0 +1,24 @@
+@using Microsoft.Extensions.Options
+@inject IOptions<PortfolioOptions> Options
+
+<section id="portfolio" class="portfolio section">
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Portfolio</h2>
+    </div>
+    <div class="container">
+        <div class="row gy-4">
+            @foreach (var p in Options.Value.Portfolio)
+            {
+                <div class="col-lg-4 col-md-6 portfolio-item">
+                    <div class="portfolio-content h-100">
+                        <img src="@p.ImageUrl" class="img-fluid" alt="@p.Title" />
+                        <div class="portfolio-info">
+                            <h4><a href="@p.Url" target="_blank" rel="noopener">@p.Title</a></h4>
+                            <p>@p.Category</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

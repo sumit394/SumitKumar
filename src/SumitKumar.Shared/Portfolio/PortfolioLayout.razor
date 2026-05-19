@@ -1,0 +1,54 @@
+@using Microsoft.Extensions.Options
+@inherits LayoutComponentBase
+@inject IOptions<PortfolioOptions> Options
+
+<div class="portfolio-shell">
+    <header id="header" class="header dark-background d-flex flex-column">
+        <i class="header-toggle d-xl-none bi bi-list" @onclick="ToggleNav"></i>
+        <div class="profile-img">
+            <img src="@Profile.AvatarUrl" alt="@Profile.FullName" class="img-fluid rounded-circle" />
+        </div>
+        <a href="#" class="logo d-flex align-items-center justify-content-center">
+            <h1 class="sitename">@Profile.FullName</h1>
+        </a>
+
+        <div class="social-links text-center">
+            @foreach (var s in Options.Value.Social)
+            {
+                <a href="@s.Url" class="@s.Network" target="_blank" rel="noopener"><i class="bi @s.Icon"></i></a>
+            }
+        </div>
+
+        <nav id="navmenu" class="navmenu">
+            <ul>
+                <li><a href="#hero" class="nav-link"><i class="bi bi-house navicon"></i><span>Home</span></a></li>
+                <li><a href="#about" class="nav-link"><i class="bi bi-person navicon"></i><span>About</span></a></li>
+                <li><a href="#resume" class="nav-link"><i class="bi bi-file-earmark-text navicon"></i><span>Resume</span></a></li>
+                <li><a href="#services" class="nav-link"><i class="bi bi-hdd-stack navicon"></i><span>Services</span></a></li>
+                <li><a href="#portfolio" class="nav-link"><i class="bi bi-images navicon"></i><span>Portfolio</span></a></li>
+                <li><a href="blog" class="nav-link"><i class="bi bi-journal-richtext navicon"></i><span>Blog</span></a></li>
+                <li><a href="#contact" class="nav-link"><i class="bi bi-envelope navicon"></i><span>Contact</span></a></li>
+                <li><a href="admin" class="nav-link admin-link"><i class="bi bi-shield-lock navicon"></i><span>Admin</span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main">
+        @Body
+    </main>
+
+    <footer id="footer" class="footer position-relative light-background">
+        <div class="container text-center">
+            <p>&copy; <span>Copyright</span> <strong class="px-1 sitename">@Profile.FullName</strong> <span>@DateTime.UtcNow.Year</span></p>
+        </div>
+    </footer>
+</div>
+
+@code {
+    private ProfileSection Profile => Options.Value.Profile;
+
+    private void ToggleNav()
+    {
+        // CSS-only toggle hook; consumer apps may inject JS for mobile nav.
+    }
+}

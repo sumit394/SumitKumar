@@ -1,0 +1,65 @@
+/* Portfolio theme inspired by iPortfolio (Bootstrap 5).
+   Self-contained subset — extend or replace with the upstream theme as desired. */
+
+:root {
+    --portfolio-accent: #149ddd;
+    --portfolio-bg: #040b14;
+    --portfolio-sidebar-width: 300px;
+}
+
+.portfolio-shell { background:#fff; color:#272829; }
+
+.portfolio-shell .header {
+    position: fixed; top:0; bottom:0; left:0; width: var(--portfolio-sidebar-width);
+    padding: 30px 15px; transition: all .5s; z-index: 9997; overflow-y:auto;
+    background:#040b14; color:#fff;
+}
+.portfolio-shell .header .profile-img img { width:120px; border:8px solid #2c2f3f; display:block; margin:0 auto; }
+.portfolio-shell .header .sitename { font-size: 24px; margin: 10px 0 0; padding:0; color:#fff; text-align:center; }
+.portfolio-shell .header .social-links { margin-top: 15px; }
+.portfolio-shell .header .social-links a { font-size: 18px; display:inline-block; color:#fff; line-height:1; padding:8px; margin-right:4px; border-radius:50%; text-align:center; background:#212431; }
+.portfolio-shell .header .social-links a:hover { background: var(--portfolio-accent); color:#fff; }
+
+.navmenu ul { list-style:none; padding:0; margin:30px 0 0; }
+.navmenu a { display:flex; align-items:center; color:#a8a9b4; padding:10px 15px; border-radius:6px; transition: .3s; text-decoration:none; }
+.navmenu a:hover, .navmenu a.active { color:#fff; background:#1f2632; }
+.navmenu .navicon { font-size:20px; margin-right:10px; color:var(--portfolio-accent); }
+.navmenu .admin-link { margin-top:20px; border-top:1px solid #1f2632; padding-top:15px; }
+
+.main { margin-left: var(--portfolio-sidebar-width); }
+@media (max-width: 1199px) { .main { margin-left: 0; } .portfolio-shell .header { left: -100%; } }
+
+.section { padding: 60px 0; scroll-margin-top: 90px; }
+.section-title { text-align:center; padding-bottom:60px; }
+.section-title h2 { font-size:32px; font-weight:700; position:relative; padding-bottom: 10px; }
+.section-title h2:after { content:""; position:absolute; left:50%; bottom:0; width:50px; height:3px; background: var(--portfolio-accent); transform: translateX(-50%); }
+
+.hero { position:relative; height:100vh; display:flex; align-items:center; justify-content:center; background-size:cover; background-position:center; color:#fff; }
+.hero:before { content:""; position:absolute; inset:0; background: rgba(5,13,24,.7); }
+.hero .container { position:relative; }
+.hero h2 { font-size:64px; font-weight:700; }
+.hero p { font-size:26px; }
+
+.resume .resume-title { font-size:26px; font-weight:700; margin-top:20px; margin-bottom:20px; color:#040b14; }
+.resume .resume-item { padding:0 0 20px 20px; margin-top:-2px; border-left:2px solid var(--portfolio-accent); position:relative; }
+.resume .resume-item h4 { line-height:18px; font-size:18px; font-weight:600; text-transform:uppercase; }
+.resume .resume-item h5 { font-size:16px; background:#e4edf9; padding:5px 15px; display:inline-block; font-weight:600; margin-bottom:10px; }
+
+.service-item { padding:40px; box-shadow:0 5px 90px 0 rgba(110,123,131,.05); background:#fff; border-radius:14px; }
+.service-item .icon { font-size:36px; color: var(--portfolio-accent); margin-bottom:15px; }
+
+.portfolio .portfolio-content { background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.06); }
+.portfolio .portfolio-info { padding:15px; }
+
+.contact .info-item { padding:20px 0; }
+.contact .info-item i { font-size:20px; color: var(--portfolio-accent); margin-right:15px; }
+.contact .php-email-form .form-control { padding: 12px; border-radius:6px; }
+.contact .php-email-form button[type="submit"] { background: var(--portfolio-accent); color:#fff; border:0; padding:10px 30px; transition: .3s; border-radius:50px; }
+
+.blog .post-img img { border-radius:10px; }
+.blog .post-category { color: var(--portfolio-accent); margin: 14px 0 0; font-weight:500; }
+.blog .title { font-size:22px; font-weight:700; margin:8px 0 12px; }
+.blog .title a { color:#040b14; text-decoration:none; }
+
+.footer { background:#040b14; color:#fff; padding:30px 0; margin-left: var(--portfolio-sidebar-width); }
+@media (max-width: 1199px) { .footer { margin-left: 0; } }

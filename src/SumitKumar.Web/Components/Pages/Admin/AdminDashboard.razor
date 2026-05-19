@@ -1,0 +1,63 @@
+@page "/admin"
+@layout AdminLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@using SumitKumar.Application.Abstractions
+@inject IBlogService BlogService
+
+<PageTitle>Admin Dashboard</PageTitle>
+
+<div class="content-header"><h1 class="m-0">Dashboard</h1></div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-journal-richtext display-6 text-primary me-3"></i>
+                    <div>
+                        <div class="h4 mb-0">@_postCount</div>
+                        <div class="text-muted">Total Posts</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-check-circle display-6 text-success me-3"></i>
+                    <div>
+                        <div class="h4 mb-0">@_publishedCount</div>
+                        <div class="text-muted">Published</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-pencil-square display-6 text-warning me-3"></i>
+                    <div>
+                        <div class="h4 mb-0">@_draftCount</div>
+                        <div class="text-muted">Drafts</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private int _postCount, _publishedCount, _draftCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var posts = await BlogService.GetAllAsync();
+        _postCount = posts.Count;
+        _publishedCount = posts.Count(p => p.IsPublished);
+        _draftCount = _postCount - _publishedCount;
+    }
+}

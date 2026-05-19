@@ -1,0 +1,22 @@
+@page "/admin/profile"
+@layout AdminLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@using Microsoft.Extensions.Options
+@using SumitKumar.Application.Options
+@inject IOptions<PortfolioOptions> Options
+
+<PageTitle>Profile</PageTitle>
+
+<div class="content-header"><h1 class="m-0">Profile</h1></div>
+
+<div class="card">
+    <div class="card-body">
+        <p class="text-muted">Public profile is configured in <code>appsettings.json</code> under the <code>Portfolio</code> section. Account credentials are managed via Identity.</p>
+        <dl class="row">
+            <dt class="col-sm-3">Full name</dt><dd class="col-sm-9">@Options.Value.Profile.FullName</dd>
+            <dt class="col-sm-3">Headline</dt><dd class="col-sm-9">@Options.Value.Profile.Headline</dd>
+            <dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Options.Value.Contact.Email</dd>
+        </dl>
+        <a class="btn btn-outline-primary" href="Account/Manage">Open account settings</a>
+    </div>
+</div>

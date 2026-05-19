@@ -1,0 +1,114 @@
+@page "/admin/blog/new"
+@page "/admin/blog/edit/{Id:guid}"
+@layout AdminLayout
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@using System.ComponentModel.DataAnnotations
+@using SumitKumar.Application.Abstractions
+@using SumitKumar.Application.DTOs
+@inject IBlogService BlogService
+@inject NavigationManager Nav
+
+<PageTitle>@(_isNew ? "New Post" : "Edit Post")</PageTitle>
+
+<div class="content-header"><h1 class="m-0">@(_isNew ? "New Post" : "Edit Post")</h1></div>
+
+<div class="card">
+    <div class="card-body">
+        <EditForm Model="@Form" OnValidSubmit="Save" FormName="BlogEditor">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label class="form-label">Title</label>
+                <InputText class="form-control" @bind-Value="Form.Title" />
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Slug</label>
+                    <InputText class="form-control" @bind-Value="Form.Slug" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Category</label>
+                    <InputText class="form-control" @bind-Value="Form.CategoryName" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Summary</label>
+                <InputTextArea class="form-control" rows="2" @bind-Value="Form.Summary" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Cover Image URL</label>
+                <InputText class="form-control" @bind-Value="Form.CoverImageUrl" />
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Author</label>
+                    <InputText class="form-control" @bind-Value="Form.AuthorName" />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Tags (comma separated)</label>
+                    <InputText class="form-control" @bind-Value="Form.TagsCsv" />
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Content (Markdown)</label>
+                <InputTextArea class="form-control" rows="12" @bind-Value="Form.ContentMarkdown" />
+            </div>
+            <div class="form-check mb-3">
+                <InputCheckbox class="form-check-input" @bind-Value="Form.IsPublished" id="pub" />
+                <label class="form-check-label" for="pub">Published</label>
+            </div>
+
+            <button class="btn btn-primary" type="submit"><i class="bi bi-save"></i> Save</button>
+            <a class="btn btn-link" href="admin/blog">Cancel</a>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Guid? Id { get; set; }
+    private bool _isNew => !Id.HasValue;
+
+    public sealed class FormModel
+    {
+        [Required, StringLength(300)] public string Title { get; set; } = string.Empty;
+        [Required, StringLength(300), RegularExpression("^[a-z0-9-]+$", ErrorMessage="Lowercase letters, digits, and hyphens only")]
+        public string Slug { get; set; } = string.Empty;
+        public string Summary { get; set; } = string.Empty;
+        public string ContentMarkdown { get; set; } = string.Empty;
+        public string? CoverImageUrl { get; set; }
+        public string AuthorName { get; set; } = "Sumit Kumar";
+        public string? CategoryName { get; set; }
+        public string TagsCsv { get; set; } = string.Empty;
+        public bool IsPublished { get; set; }
+    }
+
+    private FormModel Form { get; set; } = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id.HasValue)
+        {
+            var p = await BlogService.GetByIdAsync(Id.Value);
+            if (p is not null)
+            {
+                Form = new FormModel
+                {
+                    Title = p.Title, Slug = p.Slug, Summary = p.Summary,
+                    ContentMarkdown = p.ContentMarkdown, CoverImageUrl = p.CoverImageUrl,
+                    AuthorName = p.AuthorName, CategoryName = p.CategoryName,
+                    TagsCsv = string.Join(", ", p.Tags), IsPublished = p.IsPublished
+                };
+            }
+        }
+    }
+
+    private async Task Save()
+    {
+        var tags = Form.TagsCsv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        var input = new BlogPostUpsertDto(Id, Form.Title, Form.Slug, Form.Summary, Form.ContentMarkdown,
+            Form.CoverImageUrl, Form.AuthorName, Form.CategoryName, tags, Form.IsPublished);
+        await BlogService.UpsertAsync(input);
+        Nav.NavigateTo("admin/blog");
+    }
+}

@@ -1,0 +1,11 @@
+@using Microsoft.Extensions.Options
+@inject IOptions<PortfolioOptions> Options
+
+<section id="hero" class="hero section dark-background" style="background-image:url('@Options.Value.Profile.HeroBackgroundUrl');">
+    <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
+        <h2>@Options.Value.Profile.FullName</h2>
+        <p>
+            I'm <span class="typed">@string.Join(", ", Options.Value.Profile.Roles)</span>
+        </p>
+    </div>
+</section>
