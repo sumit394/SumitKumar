@@ -1,75 +1,53 @@
 @using Microsoft.Extensions.Options
 @inject IOptions<PortfolioOptions> Options
 
+<!-- About Section -->
 <section id="about" class="about section">
+
+    <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
         <h2>About</h2>
         <p>@Options.Value.About.Tagline</p>
-    </div>
+    </div><!-- End Section Title -->
 
     <div class="container" data-aos="fade-up" data-aos-delay="100">
+
         <div class="row gy-4 justify-content-center">
             <div class="col-lg-4">
-                <img src="@Options.Value.Profile.AvatarUrl" class="img-fluid rounded" alt="@Options.Value.Profile.FullName" />
+                <img src="@Options.Value.Profile.AvatarUrl" class="img-fluid" alt="@Options.Value.Profile.FullName" />
             </div>
             <div class="col-lg-8 content">
-                <h3>@Options.Value.Profile.Headline</h3>
-                <p class="fst-italic py-3">@Options.Value.About.Description</p>
+                <h2>@Options.Value.Profile.Headline</h2>
+                <p class="fst-italic py-3">
+                    @Options.Value.About.Description
+                </p>
                 <div class="row">
-                    @foreach (var f in Options.Value.About.Facts)
-                    {
-                        <div class="col-lg-6">
-                            <ul>
-                                <li><i class="bi bi-chevron-right"></i> <strong>@f.Label:</strong> <span>@f.Value</span></li>
-                            </ul>
-                        </div>
+                    @{
+                        var facts = Options.Value.About.Facts;
+                        var half = (facts.Count + 1) / 2;
+                        var left = facts.Take(half).ToList();
+                        var right = facts.Skip(half).ToList();
                     }
+                    <div class="col-lg-6">
+                        <ul>
+                            @foreach (var f in left)
+                            {
+                                <li><i class="bi bi-chevron-right"></i> <strong>@f.Label:</strong> <span>@f.Value</span></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-lg-6">
+                        <ul>
+                            @foreach (var f in right)
+                            {
+                                <li><i class="bi bi-chevron-right"></i> <strong>@f.Label:</strong> <span>@f.Value</span></li>
+                            }
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
-</section>
 
-@if (Options.Value.Stats.Count > 0)
-{
-    <section id="stats" class="stats section light-background">
-        <div class="container">
-            <div class="row gy-4">
-                @foreach (var s in Options.Value.Stats)
-                {
-                    <div class="col-lg-3 col-md-6">
-                        <div class="stats-item text-center w-100 h-100">
-                            <i class="bi @s.Icon"></i>
-                            <span class="purecounter">@s.Value</span>
-                            <p>@s.Label</p>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </section>
-}
-
-@if (Options.Value.Skills.Count > 0)
-{
-    <section id="skills" class="skills section">
-        <div class="container section-title" data-aos="fade-up">
-            <h2>Skills</h2>
-        </div>
-        <div class="container" data-aos="fade-up" data-aos-delay="100">
-            <div class="row skills-content">
-                @foreach (var skill in Options.Value.Skills)
-                {
-                    <div class="col-lg-6">
-                        <div class="progress">
-                            <span class="skill"><span>@skill.Name</span> <i class="val">@skill.Percent%</i></span>
-                            <div class="progress-bar-wrap">
-                                <div class="progress-bar" role="progressbar" style="width:@(skill.Percent)%" aria-valuenow="@skill.Percent" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        </div>
-    </section>
-}
+</section><!-- /About Section -->

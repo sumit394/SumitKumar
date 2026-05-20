@@ -4,64 +4,95 @@
 @inject PortfolioApiClient Api
 
 <section id="contact" class="contact section">
+
+    <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
         <h2>Contact</h2>
-        <p>Get in touch &mdash; I'll get back to you as soon as I can.</p>
-    </div>
+        <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
+    </div><!-- End Section Title -->
 
-    <div class="container" data-aos="fade-up" data-aos-delay="100">
+    <div class="container" data-aos="fade" data-aos-delay="100">
+
         <div class="row gy-4">
-            <div class="col-lg-5">
-                <div class="info-wrap">
-                    <div class="info-item d-flex"><i class="bi bi-geo-alt flex-shrink-0"></i>
-                        <div><h3>Address</h3><p>@Options.Value.Contact.Address</p></div>
+
+            <div class="col-lg-4">
+                <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
+                    <i class="bi bi-geo-alt flex-shrink-0"></i>
+                    <div>
+                        <h3>Address</h3>
+                        <p>@Options.Value.Contact.Address</p>
                     </div>
-                    <div class="info-item d-flex"><i class="bi bi-telephone flex-shrink-0"></i>
-                        <div><h3>Call Me</h3><p>@Options.Value.Contact.Phone</p></div>
+                </div><!-- End Info Item -->
+
+                <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
+                    <i class="bi bi-telephone flex-shrink-0"></i>
+                    <div>
+                        <h3>Call Us</h3>
+                        <p>@Options.Value.Contact.Phone</p>
                     </div>
-                    <div class="info-item d-flex"><i class="bi bi-envelope flex-shrink-0"></i>
-                        <div><h3>Email Me</h3><p>@Options.Value.Contact.Email</p></div>
+                </div><!-- End Info Item -->
+
+                <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
+                    <i class="bi bi-envelope flex-shrink-0"></i>
+                    <div>
+                        <h3>Email Us</h3>
+                        <p>@Options.Value.Contact.Email</p>
                     </div>
-                </div>
+                </div><!-- End Info Item -->
+
             </div>
 
-            <div class="col-lg-7">
-                <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit" FormName="ContactForm" class="php-email-form">
+            <div class="col-lg-8">
+                <EditForm Model="@Model" OnValidSubmit="HandleValidSubmit" FormName="ContactForm" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
                     <DataAnnotationsValidator />
                     <div class="row gy-4">
+
                         <div class="col-md-6">
                             <InputText class="form-control" placeholder="Your Name" @bind-Value="Model.FromName" />
                             <ValidationMessage For="@(() => Model.FromName)" />
                         </div>
-                        <div class="col-md-6">
+
+                        <div class="col-md-6 ">
                             <InputText class="form-control" placeholder="Your Email" @bind-Value="Model.FromEmail" />
                             <ValidationMessage For="@(() => Model.FromEmail)" />
                         </div>
+
                         <div class="col-md-12">
                             <InputText class="form-control" placeholder="Subject" @bind-Value="Model.Subject" />
                             <ValidationMessage For="@(() => Model.Subject)" />
                         </div>
+
                         <div class="col-md-12">
                             <InputTextArea class="form-control" rows="6" placeholder="Message" @bind-Value="Model.Body" />
                             <ValidationMessage For="@(() => Model.Body)" />
                         </div>
+
                         <div class="col-md-12 text-center">
-                            @if (_sent)
+                            @if (_busy)
                             {
-                                <div class="sent-message d-block">Your message has been sent. Thank you!</div>
+                                <div class="loading d-block">Loading</div>
                             }
                             @if (!string.IsNullOrEmpty(_error))
                             {
                                 <div class="error-message d-block">@_error</div>
                             }
+                            @if (_sent)
+                            {
+                                <div class="sent-message d-block">Your message has been sent. Thank you!</div>
+                            }
+
                             <button type="submit" disabled="@_busy">@(_busy ? "Sending..." : "Send Message")</button>
                         </div>
+
                     </div>
                 </EditForm>
-            </div>
+            </div><!-- End Contact Form -->
+
         </div>
+
     </div>
-</section>
+
+</section><!-- /Contact Section -->
 
 @code {
     public sealed class FormModel

@@ -1,15 +1,32 @@
 @using Microsoft.Extensions.Options
 @inject IOptions<PortfolioOptions> Options
 
+<!-- Resume Section -->
 <section id="resume" class="resume section">
+
+    <!-- Section Title -->
     <div class="container section-title" data-aos="fade-up">
         <h2>Resume</h2>
         <p>@Options.Value.Resume.Summary</p>
-    </div>
+    </div><!-- End Section Title -->
 
     <div class="container">
+
         <div class="row">
-            <div class="col-lg-6">
+
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="resume-title">Sumary</h3>
+
+                <div class="resume-item pb-0">
+                    <h4>@Options.Value.Profile.FullName</h4>
+                    <p><em>@Options.Value.Profile.Headline</em></p>
+                    <ul>
+                        <li>@Options.Value.Contact.Address</li>
+                        <li>@Options.Value.Contact.Phone</li>
+                        <li>@Options.Value.Contact.Email</li>
+                    </ul>
+                </div><!-- End Resume Item -->
+
                 <h3 class="resume-title">Education</h3>
                 @foreach (var e in Options.Value.Resume.Education)
                 {
@@ -17,11 +34,20 @@
                         <h4>@e.Title</h4>
                         <h5>@e.Period</h5>
                         <p><em>@e.Organization, @e.Location</em></p>
-                        <ul>@foreach (var h in e.Highlights){ <li>@h</li> }</ul>
-                    </div>
+                        @if (e.Highlights.Count == 1)
+                        {
+                            <p>@e.Highlights[0]</p>
+                        }
+                        else if (e.Highlights.Count > 1)
+                        {
+                            <ul>@foreach (var h in e.Highlights) { <li>@h</li> }</ul>
+                        }
+                    </div><!-- End Resume Item -->
                 }
+
             </div>
-            <div class="col-lg-6">
+
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
                 <h3 class="resume-title">Professional Experience</h3>
                 @foreach (var e in Options.Value.Resume.Experience)
                 {
@@ -29,10 +55,14 @@
                         <h4>@e.Title</h4>
                         <h5>@e.Period</h5>
                         <p><em>@e.Organization, @e.Location</em></p>
-                        <ul>@foreach (var h in e.Highlights){ <li>@h</li> }</ul>
-                    </div>
+                        <ul>@foreach (var h in e.Highlights) { <li>@h</li> }</ul>
+                    </div><!-- End Resume Item -->
                 }
+
             </div>
+
         </div>
+
     </div>
-</section>
+
+</section><!-- /Resume Section -->

@@ -1,11 +1,26 @@
 @using Microsoft.Extensions.Options
 @inject IOptions<PortfolioOptions> Options
 
-<section id="hero" class="hero section dark-background" style="background-image:url('@Options.Value.Profile.HeroBackgroundUrl');">
-    <div class="container text-center" data-aos="fade-up" data-aos-delay="100">
-        <h2>@Options.Value.Profile.FullName</h2>
-        <p>
-            I'm <span class="typed">@string.Join(", ", Options.Value.Profile.Roles)</span>
-        </p>
+<!-- Hero Section -->
+<section id="hero" class="hero section light-background">
+
+    <img src="@Options.Value.Profile.HeroBackgroundUrl" alt="" />
+
+    <div class="container" data-aos="zoom-out">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <h2>@Options.Value.Profile.FullName</h2>
+                <p>
+                    I'm <span class="typed" data-typed-items="@string.Join(", ", Options.Value.Profile.Roles)">@Options.Value.Profile.Roles.FirstOrDefault()</span><span class="typed-cursor typed-cursor--blink" aria-hidden="true"></span>
+                </p>
+                <div class="social-links">
+                    @foreach (var s in Options.Value.Social)
+                    {
+                        <a href="@s.Url" target="_blank" rel="noopener"><i class="bi @s.Icon"></i></a>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
-</section>
+
+</section><!-- /Hero Section -->

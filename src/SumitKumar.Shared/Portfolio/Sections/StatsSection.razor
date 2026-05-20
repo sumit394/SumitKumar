@@ -1,0 +1,29 @@
+@using Microsoft.Extensions.Options
+@inject IOptions<PortfolioOptions> Options
+
+@if (Options.Value.Stats.Count > 0)
+{
+    <!-- Stats Section -->
+    <section id="stats" class="stats section">
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="row gy-4">
+
+                @foreach (var s in Options.Value.Stats)
+                {
+                    <div class="col-lg-3 col-md-6 d-flex flex-column align-items-center">
+                        <i class="bi @s.Icon"></i>
+                        <div class="stats-item">
+                            <span data-purecounter-start="0" data-purecounter-end="@s.Value" data-purecounter-duration="1" class="purecounter"></span>
+                            <p>@s.Label</p>
+                        </div>
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </section><!-- /Stats Section -->
+}
