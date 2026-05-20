@@ -27,7 +27,7 @@ public sealed class ProfileSection
     [Required] public string FullName { get; set; } = "Sumit Kumar";
     public string Headline { get; set; } = "Software Engineer & Technology Leader";
     public List<string> Roles { get; set; } = new() { "Software Engineer", "Technology Leader", "Solution Architect" };
-    public string AvatarUrl { get; set; } = "img/profile.jpg";
+    public string AvatarUrl { get; set; } = "img/profile-img.jpg";
     public string HeroBackgroundUrl { get; set; } = "img/hero-bg.jpg";
 }
 
