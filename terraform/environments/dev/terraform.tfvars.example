@@ -1,0 +1,16 @@
+aws_region         = "us-east-1"
+project_name       = "sumitkumar"
+environment        = "dev"
+availability_zones = ["us-east-1a", "us-east-1b"]
+
+# SMTP Settings (e.g., AWS SES or external provider)
+smtp_host                  = "email-smtp.us-east-1.amazonaws.com"
+smtp_port                  = 587
+smtp_user                  = "REPLACE_WITH_SMTP_USER"
+smtp_password              = "REPLACE_WITH_SMTP_PASSWORD"
+smtp_from_address          = "no-reply@dev.sumitkumar.dev"
+smtp_from_name             = "SumitKumar Dev Portfolio"
+smtp_contact_inbox_address = "admin@sumitkumar.dev"
+
+# Monitoring
+alert_email = "alerts@sumitkumar.dev"

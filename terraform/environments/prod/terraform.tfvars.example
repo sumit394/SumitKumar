@@ -1,0 +1,30 @@
+aws_region                 = "us-east-1"
+project_name               = "sumitkumar"
+environment                = "prod"
+availability_zones         = ["us-east-1a", "us-east-1b", "us-east-1c"]
+public_subnet_cidrs        = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+private_subnet_cidrs       = ["10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24"]
+
+# Domain & SSL (Route 53 & ACM)
+certificate_arn            = "arn:aws:acm:us-east-1:123456789012:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+cloudfront_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+domain_aliases             = ["sumitkumar.dev", "www.sumitkumar.dev"]
+
+# ECS Fargate Sizing
+ecs_cpu                    = 512
+ecs_memory                 = 1024
+ecs_desired_count          = 2
+ecs_min_capacity           = 2
+ecs_max_capacity           = 6
+
+# Email / SMTP Configuration
+smtp_host                  = "email-smtp.us-east-1.amazonaws.com"
+smtp_port                  = 587
+smtp_user                  = "REPLACE_WITH_SES_OR_SMTP_USER"
+smtp_password              = "REPLACE_WITH_SES_OR_SMTP_PASSWORD"
+smtp_from_address          = "no-reply@sumitkumar.dev"
+smtp_from_name             = "Sumit Kumar"
+smtp_contact_inbox_address = "owner@sumitkumar.dev"
+
+# Monitoring
+alert_email                = "alerts@sumitkumar.dev"
