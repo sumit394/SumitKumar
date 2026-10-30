@@ -12,7 +12,7 @@
                 <p class="bingo-kicker">Every ticket a new light</p>
                 <h1>Bingo</h1>
             </div>
-            <p class="bingo-progress">@_drawnNumbers.Count <span>/ 100 drawn</span></p>
+            <p class="bingo-progress">@_drawnNumbers.Count <span>/ @MaximumNumber drawn</span></p>
         </header>
 
         @if (_dataLoadFailed)
@@ -52,10 +52,10 @@
             <section class="bingo-called" aria-label="Overall number status">
                 <div class="called-heading">
                     <h2>Number status</h2>
-                    <span>@_drawnNumbers.Count / 100</span>
+                    <span>@_drawnNumbers.Count / @MaximumNumber</span>
                 </div>
                 <ol class="called-list">
-                    @foreach (var number in Enumerable.Range(1, 100))
+                    @foreach (var number in Enumerable.Range(1, MaximumNumber))
                     {
                         var isDrawn = _drawnNumbers.Contains(number);
                         <li @key="number" class="@(isDrawn ? "is-drawn" : null)" aria-label="@($"{number}: {(isDrawn ? "drawn" : "not drawn")}")">@number</li>
@@ -65,9 +65,9 @@
         </div>
 
         <div class="bingo-controls">
-            <button class="bingo-next" type="button" @onclick="DrawNextAsync" disabled="@(_isDrawing || _drawnNumbers.Count == 100)">
+            <button class="bingo-next" type="button" @onclick="DrawNextAsync" disabled="@(_isDrawing || _drawnNumbers.Count == MaximumNumber)">
                 <i class="bi bi-skip-forward-fill" aria-hidden="true"></i>
-                <span>@(_drawnNumbers.Count == 100 ? "Complete" : "Next")</span>
+                <span>@(_drawnNumbers.Count == MaximumNumber ? "Complete" : "Next")</span>
             </button>
             <button class="bingo-reset" type="button" @onclick="ResetGame">
                 <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
@@ -78,7 +78,8 @@
 </section>
 
 @code {
-    private readonly List<int> _drawnNumbers = new(100);
+    private const int MaximumNumber = 99;
+    private readonly List<int> _drawnNumbers = new(MaximumNumber);
     private Dictionary<int, BingoNumberInfo> _specialCalls = [];
     private CancellationTokenSource? _drawCancellation;
     private int? _currentNumber;
@@ -94,7 +95,7 @@
         {
             var entries = await Api.GetBingoNumberInfoAsync();
             _specialCalls = entries
-                .Where(entry => entry.Number is >= 1 and <= 100 && !string.IsNullOrWhiteSpace(entry.Message))
+                .Where(entry => entry.Number is >= 1 and <= MaximumNumber && !string.IsNullOrWhiteSpace(entry.Message))
                 .GroupBy(entry => entry.Number)
                 .ToDictionary(group => group.Key, group => group.First());
         }
@@ -106,12 +107,12 @@
 
     private async Task DrawNextAsync()
     {
-        if (_isDrawing || _drawnNumbers.Count == 100)
+        if (_isDrawing || _drawnNumbers.Count == MaximumNumber)
         {
             return;
         }
 
-        var remainingNumbers = Enumerable.Range(1, 100)
+        var remainingNumbers = Enumerable.Range(1, MaximumNumber)
             .Where(number => !_drawnNumbers.Contains(number))
             .ToArray();
         var number = remainingNumbers[Random.Shared.Next(remainingNumbers.Length)];
