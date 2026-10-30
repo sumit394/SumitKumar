@@ -12,9 +12,14 @@ public sealed class PortfolioApiClient(HttpClient http)
     public async Task<BlogPostDto?> GetPostAsync(string slug, CancellationToken ct = default)
         => await http.GetFromJsonAsync<BlogPostDto>($"api/blog/{slug}", ct);
 
+    public async Task<IReadOnlyList<BingoNumberInfo>> GetBingoNumberInfoAsync(CancellationToken ct = default)
+        => await http.GetFromJsonAsync<List<BingoNumberInfo>>("data/bingo-events.json", ct) ?? new();
+
     public async Task SubmitContactAsync(ContactMessageDto message, CancellationToken ct = default)
     {
         var resp = await http.PostAsJsonAsync("api/contact", message, ct);
         resp.EnsureSuccessStatusCode();
     }
 }
+
+public sealed record BingoNumberInfo(int Number, string Message);

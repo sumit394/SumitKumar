@@ -1,0 +1,340 @@
+.bingo-stage {
+    --bingo-background-image: url("/img/Volunteers.png");
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 1rem 1.5rem;
+    color: #f6f7ed;
+    background-image: linear-gradient(90deg, rgba(4, 10, 28, 0.54), rgba(4, 10, 28, 0.28) 55%, rgba(4, 10, 28, 0.48)), var(--bingo-background-image);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: grid;
+    align-content: center;
+}
+
+.bingo-content {
+    width: min(100%, 1320px);
+    margin-inline: auto;
+}
+
+.bingo-heading,
+.history-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.bingo-heading {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(246, 247, 237, 0.22);
+}
+
+.bingo-kicker {
+    margin: 0 0 0.35rem;
+    color: #d3eb75;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+}
+
+.bingo-heading h1 {
+    margin: 0;
+    color: #fffef7;
+    font-family: Raleway, sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.bingo-progress {
+    margin: 0;
+    color: #d3eb75;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.bingo-progress span {
+    color: rgba(246, 247, 237, 0.68);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.bingo-warning {
+    padding: 0.75rem 1rem;
+    border-left: 4px solid #f59b72;
+    color: #fff1e9;
+    background: rgba(117, 41, 28, 0.45);
+}
+
+.bingo-board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    border: 1px solid rgba(246, 247, 237, 0.2);
+    background: rgba(4, 10, 28, 0.46);
+    backdrop-filter: blur(4px);
+}
+
+.bingo-playfield {
+    display: grid;
+    min-width: 0;
+    min-height: 190px;
+    padding: 1rem;
+    place-items: center;
+    text-align: center;
+}
+
+.bingo-number,
+.bingo-announcement,
+.bingo-ready {
+    animation: bingo-reveal 260ms ease-out both;
+}
+
+.bingo-number {
+    width: 148px;
+    aspect-ratio: 1;
+    border: 7px solid rgba(211, 235, 117, 0.35);
+    border-radius: 50%;
+    background: #d3eb75;
+    color: #183c33;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+}
+
+.bingo-number span {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+.bingo-number strong {
+    font-size: 4rem;
+    line-height: 1;
+}
+
+.bingo-announcement {
+    width: min(100%, 520px);
+}
+
+.bingo-message {
+    margin: 1rem 0 1.5rem;
+    color: #fffef7;
+    font-family: Raleway, sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.bingo-countdown {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #d3eb75;
+}
+
+.bingo-countdown strong {
+    min-width: 2.5rem;
+    font-size: 2rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.bingo-countdown span {
+    color: rgba(246, 247, 237, 0.72);
+}
+
+.bingo-ready {
+    color: rgba(246, 247, 237, 0.72);
+}
+
+.bingo-ready i {
+    color: #d3eb75;
+    font-size: 3rem;
+}
+
+.bingo-ready p {
+    margin: 0.75rem 0 0;
+    font-size: 1.1rem;
+}
+
+.bingo-called {
+    padding: 0.75rem 1rem 1rem;
+    border-top: 1px solid rgba(246, 247, 237, 0.2);
+    background: rgba(4, 10, 28, 0.56);
+}
+
+.called-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(246, 247, 237, 0.18);
+}
+
+.called-heading h2 {
+    margin: 0;
+    color: #fffef7;
+    font-family: Raleway, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.called-heading span {
+    color: #d3eb75;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.called-list {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 0.3rem;
+    margin: 0.6rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.called-list li {
+    display: grid;
+    min-height: 34px;
+    place-items: center;
+    border: 1px solid rgba(246, 247, 237, 0.16);
+    border-radius: 4px;
+    background: rgba(246, 247, 237, 0.12);
+    color: #fffef7;
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.called-list li.is-drawn {
+    background: rgba(211, 235, 117, 0.18);
+    color: #d3eb75;
+    text-decoration: line-through;
+    text-decoration-thickness: 2px;
+}
+
+.bingo-controls {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.bingo-controls button {
+    display: inline-flex;
+    min-width: 140px;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font: inherit;
+    font-weight: 700;
+    transition: background-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.bingo-controls button:hover:not(:disabled) {
+    transform: translateY(-2px);
+}
+
+.bingo-controls button:focus-visible {
+    outline: 3px solid #f59b72;
+    outline-offset: 3px;
+}
+
+.bingo-next {
+    background: #d3eb75;
+    color: #183c33;
+}
+
+.bingo-next:hover:not(:disabled) {
+    background: #e1f59a;
+}
+
+.bingo-reset {
+    border-color: rgba(246, 247, 237, 0.45) !important;
+    background: transparent;
+    color: #fffef7;
+}
+
+.bingo-reset:hover {
+    background: rgba(246, 247, 237, 0.12);
+}
+
+.bingo-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.58;
+}
+
+@keyframes bingo-reveal {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 720px) {
+    .bingo-stage {
+        padding: 0.75rem;
+    }
+
+    .bingo-heading h1 {
+        font-size: 2.5rem;
+    }
+
+    .bingo-progress {
+        font-size: 1.2rem;
+    }
+
+    .bingo-playfield {
+        min-height: 170px;
+        padding: 0.75rem;
+    }
+
+    .called-list {
+        gap: 0.2rem;
+    }
+
+    .called-list li {
+        min-height: 30px;
+        font-size: 16px;
+    }
+
+    .bingo-number {
+        width: 132px;
+    }
+
+    .bingo-number strong {
+        font-size: 3.5rem;
+    }
+
+    .bingo-message {
+        font-size: 1.6rem;
+    }
+}
+
+@media (min-width: 1200px) and (max-width: 1600px) {
+    .bingo-stage {
+        width: 100vw;
+        margin-left: -160px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .bingo-number,
+    .bingo-announcement,
+    .bingo-ready {
+        animation: none;
+    }
+
+    .bingo-controls button {
+        transition: none;
+    }
+}
