@@ -1,7 +1,6 @@
 @page "/bingo"
 @layout PortfolioLayout
 @rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
-@inject PortfolioApiClient Api
 
 <PageTitle>Diwali 2026</PageTitle>
 
@@ -15,29 +14,19 @@
             <p class="bingo-progress">@_drawnNumbers.Count <span>/ @MaximumNumber drawn</span></p>
         </header>
 
-        @if (_dataLoadFailed)
-        {
-            <p class="bingo-warning" role="status">Special call messages are unavailable. Number draws are still enabled.</p>
-        }
-
         <div class="bingo-board">
             <div class="bingo-playfield" aria-live="polite" aria-atomic="true">
-                @if (_announcement is not null)
+                @if (_currentNumbers.Length > 0)
                 {
-                    <div class="bingo-announcement" @key="_announcement">
-                        <p class="bingo-kicker">SPECIAL CALL</p>
-                        <p class="bingo-message">@_announcement</p>
-                        <div class="bingo-countdown" role="timer" aria-label="Number reveal countdown">
-                            <strong>@_countdown</strong>
-                            <span>seconds</span>
-                        </div>
-                    </div>
-                }
-                else if (_currentNumber is int currentNumber)
-                {
-                    <div class="bingo-number" @key="currentNumber">
-                        <span>NUMBER</span>
-                        <strong>@currentNumber</strong>
+                    <div class="bingo-number-pair" aria-label="Numbers drawn">
+                        @for (var index = 0; index < _currentNumbers.Length; index++)
+                        {
+                            var number = _currentNumbers[index];
+                            <div class="bingo-number-box @(_isRolling ? "is-rolling" : null)" @key="number">
+                                <span>DRAW @(index + 1)</span>
+                                <strong>@number</strong>
+                            </div>
+                        }
                     </div>
                 }
                 else
@@ -65,7 +54,7 @@
         </div>
 
         <div class="bingo-controls">
-            <button class="bingo-next" type="button" @onclick="DrawNextAsync" disabled="@(_isDrawing || _drawnNumbers.Count == MaximumNumber)">
+            <button class="bingo-next" type="button" @onclick="DrawNextAsync" disabled="@(_isRolling || _drawnNumbers.Count == MaximumNumber)">
                 <i class="bi bi-skip-forward-fill" aria-hidden="true"></i>
                 <span>@(_drawnNumbers.Count == MaximumNumber ? "Complete" : "Next")</span>
             </button>
@@ -79,98 +68,50 @@
 
 @code {
     private const int MaximumNumber = 99;
+    private const int NumbersPerDraw = 2;
+    private const int RevealDurationMilliseconds = 1500;
     private readonly List<int> _drawnNumbers = new(MaximumNumber);
-    private Dictionary<int, BingoNumberInfo> _specialCalls = [];
-    private CancellationTokenSource? _drawCancellation;
-    private int? _currentNumber;
-    private int? _countdown;
-    private string? _announcement;
-    private bool _dataLoadFailed;
-    private bool _isDrawing;
+    private int[] _currentNumbers = [];
+    private bool _isRolling;
     private int _drawGeneration;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            var entries = await Api.GetBingoNumberInfoAsync();
-            _specialCalls = entries
-                .Where(entry => entry.Number is >= 1 and <= MaximumNumber && !string.IsNullOrWhiteSpace(entry.Message))
-                .GroupBy(entry => entry.Number)
-                .ToDictionary(group => group.Key, group => group.First());
-        }
-        catch (Exception exception) when (exception is HttpRequestException or System.Text.Json.JsonException)
-        {
-            _dataLoadFailed = true;
-        }
-    }
 
     private async Task DrawNextAsync()
     {
-        if (_isDrawing || _drawnNumbers.Count == MaximumNumber)
+        if (_isRolling || _drawnNumbers.Count == MaximumNumber)
         {
             return;
         }
 
         var remainingNumbers = Enumerable.Range(1, MaximumNumber)
             .Where(number => !_drawnNumbers.Contains(number))
-            .ToArray();
-        var number = remainingNumbers[Random.Shared.Next(remainingNumbers.Length)];
-        _currentNumber = null;
+            .ToList();
+        var numbersToDraw = new List<int>(Math.Min(NumbersPerDraw, remainingNumbers.Count));
 
-        if (!_specialCalls.TryGetValue(number, out var specialCall))
+        for (var index = 0; index < NumbersPerDraw && remainingNumbers.Count > 0; index++)
         {
-            _drawnNumbers.Add(number);
-            _announcement = null;
-            _countdown = null;
-            _currentNumber = number;
-            return;
+            var selectedIndex = Random.Shared.Next(remainingNumbers.Count);
+            numbersToDraw.Add(remainingNumbers[selectedIndex]);
+            remainingNumbers.RemoveAt(selectedIndex);
         }
 
-        _isDrawing = true;
-        _announcement = specialCall.Message;
+        _currentNumbers = numbersToDraw.ToArray();
+        _drawnNumbers.AddRange(_currentNumbers);
+        _isRolling = true;
         var generation = ++_drawGeneration;
-        var cancellation = new CancellationTokenSource();
-        _drawCancellation = cancellation;
 
-        try
-        {
-            for (var seconds = 5; seconds > 0; seconds--)
-            {
-                _countdown = seconds;
-                await InvokeAsync(StateHasChanged);
-                await Task.Delay(TimeSpan.FromSeconds(1), cancellation.Token);
-            }
+        await Task.Delay(RevealDurationMilliseconds);
 
-            _drawnNumbers.Add(number);
-            _currentNumber = number;
-            _announcement = null;
-            _countdown = null;
-        }
-        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        if (generation == _drawGeneration)
         {
-        }
-        finally
-        {
-            if (generation == _drawGeneration)
-            {
-                _drawCancellation = null;
-                _isDrawing = false;
-                cancellation.Dispose();
-            }
+            _isRolling = false;
         }
     }
 
     private void ResetGame()
     {
         _drawGeneration++;
-        _drawCancellation?.Cancel();
-        _drawCancellation?.Dispose();
-        _drawCancellation = null;
         _drawnNumbers.Clear();
-        _currentNumber = null;
-        _countdown = null;
-        _announcement = null;
-        _isDrawing = false;
+        _currentNumbers = [];
+        _isRolling = false;
     }
 }
